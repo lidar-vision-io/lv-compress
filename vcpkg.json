@@ -1,0 +1,12 @@
+{
+  "name": "vs-compress",
+  "version": "0.1.0",
+  "dependencies": [
+    "pdal",
+    "boost",
+    "eigen3",
+    "tbb",
+    "zlib"
+  ],
+  "builtin-baseline": "latest"
+}
