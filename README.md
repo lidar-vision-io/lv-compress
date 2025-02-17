@@ -13,3 +13,10 @@ The project focuses on **multi-format support**, **GPU-accelerated compression**
 ### **Windows**
 ```powershell
 .\setup.ps1
+
+### **Linux**
+chmod +x setup.sh
+./setup.sh
+
+## **Usage**
+vs-compress convert input.las output.laz
