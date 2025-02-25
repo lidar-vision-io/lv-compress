@@ -63,3 +63,9 @@ Write-Host "Installing dependencies..."
 & "$VcpkgInstallPath\vcpkg.exe" install --triplet x64-windows
 
 Write-Host "VS-Compress setup complete!"
+
+# Configure CMake so that VS can pick up dependencies
+Write-Host "Configuring CMake..."
+cmake -B build -DCMAKE_TOOLCHAIN_FILE="$VcpkgInstallPath/scripts/buildsystems/vcpkg.cmake"
+
+Write-Host "VS-Compress setup complete!"
