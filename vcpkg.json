@@ -7,6 +7,5 @@
     "eigen3",
     "tbb",
     "zlib"
-  ],
-  "builtin-baseline": "latest"
+  ]
 }
