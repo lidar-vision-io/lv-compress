@@ -4,27 +4,69 @@ project(VS-Compress LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Ensure vcpkg toolchain is correctly set
-if(DEFINED ENV{VCPKG_ROOT})
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-    message(STATUS "Using vcpkg toolchain: ${CMAKE_TOOLCHAIN_FILE}")
+# Set the vcpkg installation directory in the project root (not per-build)
+set(VCPKG_DIR "${CMAKE_SOURCE_DIR}/out/vcpkg")
+
+# Clone vcpkg if it doesn't exist
+if(NOT EXISTS "${VCPKG_DIR}/vcpkg" AND NOT EXISTS "${VCPKG_DIR}/vcpkg.exe")
+    message(STATUS "Cloning vcpkg into ${VCPKG_DIR}...")
+    execute_process(
+        COMMAND git clone https://github.com/microsoft/vcpkg.git "${VCPKG_DIR}"
+        RESULT_VARIABLE GIT_CLONE_RESULT
+    )
+    if(GIT_CLONE_RESULT)
+        message(FATAL_ERROR "Failed to clone vcpkg")
+    endif()
+
+    message(STATUS "Bootstrapping vcpkg...")
+    if(WIN32)
+        execute_process(
+            COMMAND "${VCPKG_DIR}/bootstrap-vcpkg.bat"
+            WORKING_DIRECTORY "${VCPKG_DIR}"
+            RESULT_VARIABLE VCPKG_BOOTSTRAP_RESULT
+        )
+    else()
+        execute_process(
+            COMMAND "${VCPKG_DIR}/bootstrap-vcpkg.sh"
+            WORKING_DIRECTORY "${VCPKG_DIR}"
+            RESULT_VARIABLE VCPKG_BOOTSTRAP_RESULT
+        )
+    endif()
+    
+    if(VCPKG_BOOTSTRAP_RESULT)
+        message(FATAL_ERROR "Failed to bootstrap vcpkg")
+    endif()
 endif()
 
-# Find dependencies installed via vcpkg
+# Set the toolchain file after vcpkg is ready
+set(CMAKE_TOOLCHAIN_FILE "${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+
+# Ensure vcpkg installs required dependencies before configuring the project
+message(STATUS "Installing dependencies via vcpkg...")
+execute_process(
+    COMMAND "${VCPKG_DIR}/vcpkg" install --triplet x64-windows
+    RESULT_VARIABLE VCPKG_INSTALL_RESULT
+)
+if(VCPKG_INSTALL_RESULT)
+    message(FATAL_ERROR "Failed to install vcpkg dependencies")
+endif()
+
+# Set the correct prefix path for finding packages
+set(CMAKE_PREFIX_PATH "${VCPKG_DIR}/installed/x64-windows")
+
+# Find dependencies
 find_package(TBB CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(Boost CONFIG REQUIRED)
 find_package(PDAL CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 
-# Add executable target
 add_executable(vs-compress src/main.cpp)
 
-# Link dependencies
 target_link_libraries(vs-compress PRIVATE 
-    TBB::tbb                 
+    TBB::tbb                
     Eigen3::Eigen 
     Boost::boost 
-    pdalcpp                  
+    pdalcpp                 
     ZLIB::ZLIB
 )
