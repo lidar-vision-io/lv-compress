@@ -52,7 +52,7 @@ if(VCPKG_INSTALL_RESULT)
 endif()
 
 # Set the correct prefix path for finding packages
-set(CMAKE_PREFIX_PATH "${VCPKG_DIR}/installed/x64-windows")
+set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows")
 
 # Find dependencies
 find_package(TBB CONFIG REQUIRED)
@@ -64,7 +64,8 @@ find_package(ZLIB REQUIRED)
 add_executable(vs-compress src/main.cpp)
 
 target_link_libraries(vs-compress PRIVATE 
-    TBB::tbb                
+    TBB::tbb
+    TBB::tbbmalloc
     Eigen3::Eigen 
     Boost::boost 
     pdalcpp                 
