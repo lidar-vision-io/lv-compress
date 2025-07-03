@@ -1,6 +1,6 @@
-﻿# VS-Compress
+﻿# LV-Compress
 
-VS-Compress is a **high-performance point cloud compression tool** designed for **fast storage and efficient processing** of lidar and 3D scan data.  
+LV-Compress is a **high-performance point cloud compression tool** designed for **fast storage and efficient processing** of lidar and 3D scan data.  
 The project focuses on **multi-format support**, **GPU-accelerated compression**, and **seamless integration with GIS tools**.
 
 ## Features
@@ -19,4 +19,4 @@ chmod +x setup.sh
 ./setup.sh
 
 ## **Usage**
-vs-compress convert input.las output.laz
+lv-compress convert input.las output.laz
