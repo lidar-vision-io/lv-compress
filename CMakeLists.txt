@@ -57,7 +57,7 @@ set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-windows")
 # Find dependencies
 find_package(TBB CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
-find_package(Boost CONFIG REQUIRED)
+find_package(Boost CONFIG REQUIRED COMPONENTS program_options)
 find_package(PDAL CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 
@@ -68,6 +68,7 @@ target_link_libraries(lv-compress PRIVATE
     TBB::tbbmalloc
     Eigen3::Eigen 
     Boost::boost 
+    Boost::program_options
     pdalcpp                 
     ZLIB::ZLIB
 )

@@ -4,6 +4,7 @@
   "dependencies": [
     "pdal",
     "boost",
+    "boost-program-options",
     "eigen3",
     "tbb",
     "zlib"
