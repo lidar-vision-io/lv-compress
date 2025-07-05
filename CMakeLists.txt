@@ -61,9 +61,9 @@ find_package(Boost CONFIG REQUIRED)
 find_package(PDAL CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 
-add_executable(vs-compress src/main.cpp)
+add_executable(lv-compress src/main.cpp)
 
-target_link_libraries(vs-compress PRIVATE 
+target_link_libraries(lv-compress PRIVATE 
     TBB::tbb
     TBB::tbbmalloc
     Eigen3::Eigen 
